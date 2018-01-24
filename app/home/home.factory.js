@@ -4,12 +4,12 @@ angular
 
 function HomeFactory($http) {
 
-	// $httpProvider.defaults.headers.get = { 'Accept' : 'application/json' }
-
 	var response = [];
 
 	var factory = {
-		get: get
+		get: get,
+		post: post,
+		getById: getById
 	};
 
 	return factory;
@@ -25,6 +25,24 @@ function HomeFactory($http) {
 	      .catch(function (error) {
 	      	console.log(error);
 	      });
+  	}
+
+  	function post(item){
+  		return $http.post('http://gbhavelaar.nl/api/appointments', {
+  			barber: item.barber,
+  			date: item.date,
+  			time: item.time
+  		})
+  	}
+
+  	function getById(id) {
+  		var appointment = {};
+  		angular.forEach(response.items, function(value, key) {
+  			if (value.id == id) {
+  				appointment = value;
+  			}
+  		});
+  		return appointment;
   	}
 
 }

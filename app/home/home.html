@@ -2,4 +2,16 @@
 
 <div ng-repeat="appointment in home.appointments">
 	<p>kapper: {{ appointment.barber }}</p>
+	<button ui-sref="form({ id: appointment.id})">Aanpassen</button>
 </div>
+
+<br>
+<br>
+<hr>
+<h3>Nieuw item</h3>
+<form>
+	<input type="text" ng-model="home.newAppointmentData.barber" name="">
+	<input type="date" ng-model="home.newAppointmentData.date" name="">
+	<input type="time" ng-model="home.newAppointmentData.time" name="">
+	<button ng-click="home.newAppointment()">versturen</button>
+</form>

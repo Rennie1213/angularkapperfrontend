@@ -5,14 +5,15 @@
 </head>
 <body>
 
-	<div ui-view="home"></div>
+	<div ui-view="header"  class="header-view"></div>
+	<div ui-view="content" class="content-view"></div>
 
 	<!-- dependency -->
 	<script src="node_modules/angular/angular.min.js"></script>
 	<script src="node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
 
 	<!-- src -->
-	<script src="dist/bundle.js"></script>
+	<script src="dist/bundle.js?v=1"></script>
 
 </body>
 </html>

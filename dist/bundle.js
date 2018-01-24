@@ -71,7 +71,10 @@ __webpack_require__(1);
 __webpack_require__(2);
 __webpack_require__(3);
 __webpack_require__(4);
-module.exports = __webpack_require__(5);
+__webpack_require__(5);
+__webpack_require__(6);
+__webpack_require__(7);
+module.exports = __webpack_require__(8);
 
 
 /***/ }),
@@ -82,25 +85,56 @@ angular
 	.module('project.config', ['project'])
 	.config(configApp);
 
-function configApp($stateProvider, $httpProvider) {
+function configApp($stateProvider, $httpProvider, $urlRouterProvider, $locationProvider) {
 
 	$httpProvider.defaults.headers.get = { 
 		'Accept': 'application/json'
 	}
 
+	$httpProvider.defaults.headers.post = { 
+		'Accept': 'application/json',
+		'Content-Type': 'application/json'
+	}
+
+	$locationProvider.hashPrefix('');
+	$urlRouterProvider.otherwise('/home');
+
 	$stateProvider
 
 		.state('app', {
 			name: 'app',
-			url: '',
+			url: '/home',
+			abstract: true,
 			views: {
-				'home': {
-					templateUrl: 	'app/home/home.html',
-					controller: 	'HomeController',
-					controllerAs:   'home'
+				'header': {
+					templateUrl: 'app/header/header.html',
+					controller:  'HeaderController',
+					controllerAs: 'header'
 				}
 			}
 	 	})
+
+	 	.state('home', {
+	 		name: 'home',
+	 		url: '/home',
+	 		views: {
+	  		'content@': {
+	  			templateUrl: 	'app/home/home.html',
+	  			controller: 	'HomeController',
+	  			controllerAs: 'home'
+	  		}
+	 	}})
+
+	 	.state('form', {
+	 		name: 'form',
+	 		url: '/form/{id}',
+	 		views: {
+	  		'content@': {
+	  			templateUrl: 	'app/form/form.html',
+	  			controller: 	'FormController',
+	  			controllerAs: 'form'
+	  		}
+	 	}});
 
 
 	 console.debug('configuration completed');
@@ -118,15 +152,53 @@ angular.module('project', ['project.run', 'project.config']);
 /***/ (function(module, exports) {
 
 angular
-	.module('project.run', ['ui.router', 'project.home'])
+	.module('project.run', ['ui.router', 'project.header', 'project.home', 'project.form'])
 	.run(runApp);
 
 function runApp() {
-	console.debug('E-learning app started');
+	console.debug('init dependencies');
 }
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports) {
+
+angular
+	.module('project.form', ['project', 'project.home.factory'])
+	.controller('FormController', FormController);
+
+function FormController($state, $stateParams, HomeFactory) {
+
+	var form = this;
+	var id = $stateParams.id;
+
+
+	form.appointment = HomeFactory.getById(id);
+
+	console.log(form.appointment.barber);
+
+}
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+angular
+	.module('project.header', ['project'])
+	.controller('HeaderController', HeaderController);
+
+function HeaderController($state) {
+	var header = this;
+}
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports) {
 
 angular
@@ -136,16 +208,30 @@ angular
 function HomeController($state, $http, HomeFactory) {
 
 	var home = this;
+	home.newAppointmentData = {
+		barder: '',
+		date: '',
+		time: ''
+	}
 	
 	HomeFactory.get().then(function (data) {
 		home.appointments = data.items;
 		console.log(home.appointments);
 	});
 
+	home.newAppointment = function() {
+		console.log(home.newAppointmentData)
+		HomeFactory.post(home.newAppointmentData).then(function (response) {
+			console.log(response);
+		}).catch(function (error) {
+			console.log(error);
+		})
+	}
+
 }
 
 /***/ }),
-/* 5 */
+/* 8 */
 /***/ (function(module, exports) {
 
 angular
@@ -154,12 +240,12 @@ angular
 
 function HomeFactory($http) {
 
-	// $httpProvider.defaults.headers.get = { 'Accept' : 'application/json' }
-
 	var response = [];
 
 	var factory = {
-		get: get
+		get: get,
+		post: post,
+		getById: getById
 	};
 
 	return factory;
@@ -175,6 +261,24 @@ function HomeFactory($http) {
 	      .catch(function (error) {
 	      	console.log(error);
 	      });
+  	}
+
+  	function post(item){
+  		return $http.post('http://gbhavelaar.nl/api/appointments', {
+  			barber: item.barber,
+  			date: item.date,
+  			time: item.time
+  		})
+  	}
+
+  	function getById(id) {
+  		var appointment = {};
+  		angular.forEach(response.items, function(value, key) {
+  			if (value.id == id) {
+  				appointment = value;
+  			}
+  		});
+  		return appointment;
   	}
 
 }

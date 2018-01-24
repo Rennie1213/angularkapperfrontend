@@ -1,7 +1,7 @@
 angular
-	.module('project.run', ['ui.router', 'project.home'])
+	.module('project.run', ['ui.router', 'project.header', 'project.home', 'project.form'])
 	.run(runApp);
 
 function runApp() {
-	console.debug('E-learning app started');
+	console.debug('init dependencies');
 }
