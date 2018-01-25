@@ -9,6 +9,7 @@ function HomeFactory($http) {
 	var factory = {
 		get: get,
 		post: post,
+		destroy: destroy,
 		getById: getById
 	};
 
@@ -34,6 +35,11 @@ function HomeFactory($http) {
   			time: item.time
   		})
   	}
+
+  	function destroy(id) {
+		return $http.delete('http://gbhavelaar.nl/api/appointments/' + id)
+    }
+
 
   	function getById(id) {
   		var appointment = {};

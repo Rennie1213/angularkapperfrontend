@@ -23,6 +23,13 @@ function HomeController($state, $http, HomeFactory) {
 		}).catch(function (error) {
 			console.log(error);
 		})
+	};
+	home.destroyAppointment =  function(id){
+		HomeFactory.destroy(id).then(function(response){
+            home.get();
+        }).catch(function (error) {
+            console.log(error);
+        })
 	}
 
 }

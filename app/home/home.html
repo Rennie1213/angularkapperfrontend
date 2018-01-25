@@ -1,17 +1,31 @@
-<h1>home</h1>
+<div class="container">
+    <h1 class="h1">Afspraken</h1>
 
-<div ng-repeat="appointment in home.appointments">
-	<p>kapper: {{ appointment.barber }}</p>
-	<button ui-sref="form({ id: appointment.id})">Aanpassen</button>
+    <ul class="list-group" ng-repeat="appointment in home.appointments">
+        <li class="list-group-item">
+            <h3 class="h3">Afspraak bij {{ appointment.barber }}</h3>
+
+        </li>
+        <button class="btn btn-primary" ui-sref="form({ id: appointment.id})">Bekijken & Aanpassen</button>
+        <button class="btn btn-danger" ng-click="home.destroyAppointment(appointment.id)">Verwijderen</button>
+
+    </ul>
+
+    <br>
+    <hr>
+    <h3>Nieuw item</h3>
+    <form class="form-group">
+        <label for="barber">Kapper</label>
+        <input id="barber" class="form-control" type="text" ng-model="home.newAppointmentData.barber" name="">
+        <br>
+        <label for="date">Datum</label>
+        <input id="date" class="form-control" type="date" ng-model="home.newAppointmentData.date" name="">
+        <br>
+        <label for="time">Tijd</label>
+        <input id="time" class="form-control" type="time" ng-model="home.newAppointmentData.time" name="">
+        <br>
+        <button class="btn btn-success" ng-click="home.newAppointment()">Opslaan</button>
+    </form>
 </div>
 
-<br>
-<br>
-<hr>
-<h3>Nieuw item</h3>
-<form>
-	<input type="text" ng-model="home.newAppointmentData.barber" name="">
-	<input type="date" ng-model="home.newAppointmentData.date" name="">
-	<input type="time" ng-model="home.newAppointmentData.time" name="">
-	<button ng-click="home.newAppointment()">versturen</button>
-</form>
+

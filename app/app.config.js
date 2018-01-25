@@ -12,6 +12,10 @@ function configApp($stateProvider, $httpProvider, $urlRouterProvider, $locationP
 		'Accept': 'application/json',
 		'Content-Type': 'application/json'
 	}
+    $httpProvider.defaults.headers.delete = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
 
 	$locationProvider.hashPrefix('');
 	$urlRouterProvider.otherwise('/home');
