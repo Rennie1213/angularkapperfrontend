@@ -1,5 +1,5 @@
 angular
-    .module('project.form.factory', ['project'])
+    .module('angularkapperfrontend.form.factory', ['angularkapperfrontend'])
     .factory('FormFactory', FormFactory);
 
 function FormFactory($http) {
@@ -17,8 +17,8 @@ function FormFactory($http) {
     function put(item){
         return $http.put('http://gbhavelaar.nl/api/appointments/' + item.id, {
             barber: item.barber,
-            date: item.date,
-            time: item.time
+            date: item.castDate,
+            time: item.castTime
         })
     }
 

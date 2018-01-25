@@ -1,5 +1,5 @@
 angular
-	.module('project.run', ['ui.router', 'project.header', 'project.home', 'project.form'])
+	.module('angularkapperfrontend.run', ['ui.router', 'angularkapperfrontend.home', 'angularkapperfrontend.form'])
 	.run(runApp);
 
 function runApp() {

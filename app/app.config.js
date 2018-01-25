@@ -1,5 +1,5 @@
 angular
-	.module('project.config', ['project'])
+	.module('angularkapperfrontend.config', ['angularkapperfrontend'])
 	.config(configApp);
 
 function configApp($stateProvider, $httpProvider, $urlRouterProvider, $locationProvider) {

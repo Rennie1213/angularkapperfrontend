@@ -1,1 +1,1 @@
-angular.module('project', ['project.run', 'project.config']);
+angular.module('angularkapperfrontend', ['angularkapperfrontend.run', 'angularkapperfrontend.config']);

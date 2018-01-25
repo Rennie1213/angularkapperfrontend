@@ -1,5 +1,5 @@
 angular
-	.module('project.home.factory', ['project'])
+	.module('angularkapperfrontend.home.factory', ['angularkapperfrontend'])
 	.factory('HomeFactory', HomeFactory);
 
 function HomeFactory($http) {

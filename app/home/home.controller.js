@@ -1,5 +1,5 @@
 angular
-	.module('project.home', ['project', 'project.home.factory'])
+	.module('angularkapperfrontend.home', ['angularkapperfrontend', 'angularkapperfrontend.home.factory'])
 	.controller('HomeController', HomeController);
 
 function HomeController($state, $http, HomeFactory) {
@@ -10,7 +10,7 @@ function HomeController($state, $http, HomeFactory) {
 		barder: '',
 		date: '',
 		time: ''
-	}
+	};
 
 	home.activePage = 1;
 	home.loading = false;

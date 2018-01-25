@@ -73,8 +73,7 @@ __webpack_require__(3);
 __webpack_require__(4);
 __webpack_require__(5);
 __webpack_require__(6);
-__webpack_require__(7);
-module.exports = __webpack_require__(8);
+module.exports = __webpack_require__(7);
 
 
 /***/ }),
@@ -82,7 +81,7 @@ module.exports = __webpack_require__(8);
 /***/ (function(module, exports) {
 
 angular
-	.module('project.config', ['project'])
+	.module('angularkapperfrontend.config', ['angularkapperfrontend'])
 	.config(configApp);
 
 function configApp($stateProvider, $httpProvider, $urlRouterProvider, $locationProvider) {
@@ -147,7 +146,7 @@ function configApp($stateProvider, $httpProvider, $urlRouterProvider, $locationP
 /* 2 */
 /***/ (function(module, exports) {
 
-angular.module('project', ['project.run', 'project.config']);
+angular.module('angularkapperfrontend', ['angularkapperfrontend.run', 'angularkapperfrontend.config']);
 
 
 /***/ }),
@@ -155,7 +154,7 @@ angular.module('project', ['project.run', 'project.config']);
 /***/ (function(module, exports) {
 
 angular
-	.module('project.run', ['ui.router', 'project.header', 'project.home', 'project.form'])
+	.module('angularkapperfrontend.run', ['ui.router', 'angularkapperfrontend.home', 'angularkapperfrontend.form'])
 	.run(runApp);
 
 function runApp() {
@@ -167,7 +166,7 @@ function runApp() {
 /***/ (function(module, exports) {
 
 angular
-	.module('project.form', ['project', 'project.home.factory', 'project.form.factory'])
+	.module('angularkapperfrontend.form', ['angularkapperfrontend', 'angularkapperfrontend.home.factory', 'angularkapperfrontend.form.factory'])
 	.controller('FormController', FormController);
 
 function FormController($state, $stateParams, HomeFactory, FormFactory) {
@@ -176,8 +175,8 @@ function FormController($state, $stateParams, HomeFactory, FormFactory) {
 	var id = $stateParams.id;
 
 	form.appointment = HomeFactory.getById(id);
-	form.castDate = new Date(form.appointment.date);
-	form.castTime = new Date(form.appointment.time);
+	form.appointment.castDate = new Date(form.appointment.date);
+	form.appointment.castTime = new Date(form.appointment.time);
 
     form.editAppointment = function() {
         FormFactory.put(form.appointment).then(function (response) {
@@ -194,7 +193,7 @@ function FormController($state, $stateParams, HomeFactory, FormFactory) {
 /***/ (function(module, exports) {
 
 angular
-    .module('project.form.factory', ['project'])
+    .module('angularkapperfrontend.form.factory', ['angularkapperfrontend'])
     .factory('FormFactory', FormFactory);
 
 function FormFactory($http) {
@@ -212,8 +211,8 @@ function FormFactory($http) {
     function put(item){
         return $http.put('http://gbhavelaar.nl/api/appointments/' + item.id, {
             barber: item.barber,
-            date: item.date,
-            time: item.time
+            date: item.castDate,
+            time: item.castTime
         })
     }
 
@@ -224,19 +223,7 @@ function FormFactory($http) {
 /***/ (function(module, exports) {
 
 angular
-	.module('project.header', ['project'])
-	.controller('HeaderController', HeaderController);
-
-function HeaderController($state) {
-	var header = this;
-}
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-angular
-	.module('project.home', ['project', 'project.home.factory'])
+	.module('angularkapperfrontend.home', ['angularkapperfrontend', 'angularkapperfrontend.home.factory'])
 	.controller('HomeController', HomeController);
 
 function HomeController($state, $http, HomeFactory) {
@@ -247,7 +234,7 @@ function HomeController($state, $http, HomeFactory) {
 		barder: '',
 		date: '',
 		time: ''
-	}
+	};
 
 	home.activePage = 1;
 	home.loading = false;
@@ -291,11 +278,11 @@ function HomeController($state, $http, HomeFactory) {
 }
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports) {
 
 angular
-	.module('project.home.factory', ['project'])
+	.module('angularkapperfrontend.home.factory', ['angularkapperfrontend'])
 	.factory('HomeFactory', HomeFactory);
 
 function HomeFactory($http) {

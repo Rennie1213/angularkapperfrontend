@@ -1,5 +1,5 @@
 angular
-	.module('project.form', ['project', 'project.home.factory', 'project.form.factory'])
+	.module('angularkapperfrontend.form', ['angularkapperfrontend', 'angularkapperfrontend.home.factory', 'angularkapperfrontend.form.factory'])
 	.controller('FormController', FormController);
 
 function FormController($state, $stateParams, HomeFactory, FormFactory) {
@@ -8,8 +8,8 @@ function FormController($state, $stateParams, HomeFactory, FormFactory) {
 	var id = $stateParams.id;
 
 	form.appointment = HomeFactory.getById(id);
-	form.castDate = new Date(form.appointment.date);
-	form.castTime = new Date(form.appointment.time);
+	form.appointment.castDate = new Date(form.appointment.date);
+	form.appointment.castTime = new Date(form.appointment.time);
 
     form.editAppointment = function() {
         FormFactory.put(form.appointment).then(function (response) {
