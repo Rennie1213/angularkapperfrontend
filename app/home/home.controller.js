@@ -5,28 +5,47 @@ angular
 function HomeController($state, $http, HomeFactory) {
 
 	var home = this;
+
 	home.newAppointmentData = {
 		barder: '',
 		date: '',
 		time: ''
 	}
+
+	home.activePage = 1;
+	home.loading = false;
 	
-	HomeFactory.get().then(function (data) {
-		home.appointments = data.items;
-		console.log(home.appointments);
-	});
+	// init
+	getByPage();
+
+	function getByPage () {
+		HomeFactory.getPage(home.activePage).then(function (data) {
+			home.appointments = data.items;
+		});
+	}
+
+
+	home.getNewPage = function(value) {
+		home.activePage += value;
+		getByPage();
+	}
+
 
 	home.newAppointment = function() {
-		console.log(home.newAppointmentData)
+		home.loading = true;
+
 		HomeFactory.post(home.newAppointmentData).then(function (response) {
-			console.log(response);
+			home.loading = false;
+			getByPage();
 		}).catch(function (error) {
 			console.log(error);
 		})
 	};
+
+
 	home.destroyAppointment =  function(id){
 		HomeFactory.destroy(id).then(function(response){
-            home.get();
+            getByPage();
         }).catch(function (error) {
             console.log(error);
         })

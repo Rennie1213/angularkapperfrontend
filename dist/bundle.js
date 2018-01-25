@@ -90,11 +90,18 @@ function configApp($stateProvider, $httpProvider, $urlRouterProvider, $locationP
 	$httpProvider.defaults.headers.get = { 
 		'Accept': 'application/json'
 	}
-
 	$httpProvider.defaults.headers.post = { 
 		'Accept': 'application/json',
 		'Content-Type': 'application/json'
 	}
+    $httpProvider.defaults.headers.delete = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+    $httpProvider.defaults.headers.put = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
 
 	$locationProvider.hashPrefix('');
 	$urlRouterProvider.otherwise('/home');
@@ -106,11 +113,7 @@ function configApp($stateProvider, $httpProvider, $urlRouterProvider, $locationP
 			url: '/home',
 			abstract: true,
 			views: {
-				'header': {
-					templateUrl: 'app/header/header.html',
-					controller:  'HeaderController',
-					controllerAs: 'header'
-				}
+
 			}
 	 	})
 
@@ -164,18 +167,25 @@ function runApp() {
 /***/ (function(module, exports) {
 
 angular
-	.module('project.form', ['project', 'project.home.factory'])
+	.module('project.form', ['project', 'project.home.factory', 'project.form.factory'])
 	.controller('FormController', FormController);
 
-function FormController($state, $stateParams, HomeFactory) {
+function FormController($state, $stateParams, HomeFactory, FormFactory) {
 
 	var form = this;
 	var id = $stateParams.id;
 
-
 	form.appointment = HomeFactory.getById(id);
+	form.castDate = new Date(form.appointment.date);
+	form.castTime = new Date(form.appointment.time);
 
-	console.log(form.appointment.barber);
+    form.editAppointment = function() {
+        FormFactory.put(form.appointment).then(function (response) {
+            $state.go('home');
+        }).catch(function (error) {
+            console.log(error);
+        })
+    }
 
 }
 
@@ -183,7 +193,31 @@ function FormController($state, $stateParams, HomeFactory) {
 /* 5 */
 /***/ (function(module, exports) {
 
+angular
+    .module('project.form.factory', ['project'])
+    .factory('FormFactory', FormFactory);
 
+function FormFactory($http) {
+
+    var response = [];
+
+    var factory = {
+        put: put
+    };
+
+    return factory;
+
+    ///////////////////////
+
+    function put(item){
+        return $http.put('http://gbhavelaar.nl/api/appointments/' + item.id, {
+            barber: item.barber,
+            date: item.date,
+            time: item.time
+        })
+    }
+
+}
 
 /***/ }),
 /* 6 */
@@ -208,24 +242,50 @@ angular
 function HomeController($state, $http, HomeFactory) {
 
 	var home = this;
+
 	home.newAppointmentData = {
 		barder: '',
 		date: '',
 		time: ''
 	}
+
+	home.activePage = 1;
+	home.loading = false;
 	
-	HomeFactory.get().then(function (data) {
-		home.appointments = data.items;
-		console.log(home.appointments);
-	});
+	// init
+	getByPage();
+
+	function getByPage () {
+		HomeFactory.getPage(home.activePage).then(function (data) {
+			home.appointments = data.items;
+		});
+	}
+
+
+	home.getNewPage = function(value) {
+		home.activePage += value;
+		getByPage();
+	}
+
 
 	home.newAppointment = function() {
-		console.log(home.newAppointmentData)
+		home.loading = true;
+
 		HomeFactory.post(home.newAppointmentData).then(function (response) {
-			console.log(response);
+			home.loading = false;
+			getByPage();
 		}).catch(function (error) {
 			console.log(error);
 		})
+	};
+
+
+	home.destroyAppointment =  function(id){
+		HomeFactory.destroy(id).then(function(response){
+            getByPage();
+        }).catch(function (error) {
+            console.log(error);
+        })
 	}
 
 }
@@ -245,7 +305,9 @@ function HomeFactory($http) {
 	var factory = {
 		get: get,
 		post: post,
-		getById: getById
+		destroy: destroy,
+		getById: getById,
+		getPage: getPage
 	};
 
 	return factory;
@@ -263,6 +325,17 @@ function HomeFactory($http) {
 	      });
   	}
 
+  	function getPage(pageNumber) {
+		return $http.get('http://gbhavelaar.nl/api/appointments?page=' + pageNumber).then(function (getComplete) {
+	      	response = getComplete.data;
+
+	      	return response;
+	      })
+	      .catch(function (error) {
+	      	console.log(error);
+	      });
+  	}
+
   	function post(item){
   		return $http.post('http://gbhavelaar.nl/api/appointments', {
   			barber: item.barber,
@@ -270,6 +343,11 @@ function HomeFactory($http) {
   			time: item.time
   		})
   	}
+
+  	function destroy(id) {
+		return $http.delete('http://gbhavelaar.nl/api/appointments/' + id)
+    }
+
 
   	function getById(id) {
   		var appointment = {};

@@ -15,7 +15,7 @@ function FormFactory($http) {
     ///////////////////////
 
     function put(item){
-        return $http.post('http://gbhavelaar.nl/api/appointments', {
+        return $http.put('http://gbhavelaar.nl/api/appointments/' + item.id, {
             barber: item.barber,
             date: item.date,
             time: item.time

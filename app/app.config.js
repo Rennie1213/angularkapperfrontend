@@ -7,12 +7,15 @@ function configApp($stateProvider, $httpProvider, $urlRouterProvider, $locationP
 	$httpProvider.defaults.headers.get = { 
 		'Accept': 'application/json'
 	}
-
 	$httpProvider.defaults.headers.post = { 
 		'Accept': 'application/json',
 		'Content-Type': 'application/json'
 	}
     $httpProvider.defaults.headers.delete = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+    $httpProvider.defaults.headers.put = {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
     }
@@ -27,11 +30,7 @@ function configApp($stateProvider, $httpProvider, $urlRouterProvider, $locationP
 			url: '/home',
 			abstract: true,
 			views: {
-				'header': {
-					templateUrl: 'app/header/header.html',
-					controller:  'HeaderController',
-					controllerAs: 'header'
-				}
+
 			}
 	 	})
 

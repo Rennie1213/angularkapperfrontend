@@ -10,7 +10,8 @@ function HomeFactory($http) {
 		get: get,
 		post: post,
 		destroy: destroy,
-		getById: getById
+		getById: getById,
+		getPage: getPage
 	};
 
 	return factory;
@@ -19,6 +20,17 @@ function HomeFactory($http) {
 
 	function get() {
 		return $http.get('http://gbhavelaar.nl/api/appointments').then(function (getComplete) {
+	      	response = getComplete.data;
+
+	      	return response;
+	      })
+	      .catch(function (error) {
+	      	console.log(error);
+	      });
+  	}
+
+  	function getPage(pageNumber) {
+		return $http.get('http://gbhavelaar.nl/api/appointments?page=' + pageNumber).then(function (getComplete) {
 	      	response = getComplete.data;
 
 	      	return response;
